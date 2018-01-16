@@ -1,6 +1,19 @@
 ab -n 50 -c 10 -p ./query.json -T application/json http://192.168.1.147:8081/sdkserver/login
 
 
+login and register json
+{
+  "systemName": "iOS",
+  "root": "0",
+  "deviceName": "MacBook Pro",
+  "platform": "ios",
+  "password": "pwd:2",
+  "appId": "1",
+  "username": "username:2",
+  "systemVersion": "11.0.1",
+  "sign": "cd507bd9381e86f7cb66993532596004",
+  "deviceModel": "iPhone"
+}
 
 # ab -n 800 -c 800  http://192.168.0.10/ 
 # （-n发出800个请求，-c模拟800并发，相当800人同时访问，后面是测试url）
