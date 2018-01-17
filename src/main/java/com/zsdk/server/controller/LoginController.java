@@ -5,12 +5,17 @@ import com.google.gson.Gson;
 import com.zsdk.server.client.LoginInfo;
 import com.zsdk.server.client.LoginResult;
 import com.zsdk.server.client.Result;
+import com.zsdk.server.dao.GameInfoMapper;
+import com.zsdk.server.model.GameInfo;
 import com.zsdk.server.model.UserInfo;
 import com.zsdk.server.service.LoginService;
 import com.zsdk.server.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +24,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by zhj on 2017/3/14.
@@ -41,51 +47,30 @@ public class LoginController {
         HttpUtil.replyToClient(response, LoginResultBuilder.sucess(loginResult));
     }
 
-    private LoginInfo checkParam(HttpServletRequest request, HttpServletResponse response) {
-        String str = HttpUtil.getHttpPostBodyString(request);
-        try {
-            str = URLDecoder.decode(str, "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            Log.e("error url decode", e);
-        }
-
-        Gson json = new Gson();
-        LoginInfo loginInfo = json.fromJson(str, LoginInfo.class);
-        Log.i("[LoginController login]: " + str);
+    @RequestMapping(value = "/login.do", method = RequestMethod.POST)
+    @ResponseBody
+    public void login(HttpServletRequest request, HttpServletResponse response, @RequestBody LoginInfo loginInfo) throws IOException {
 
         if (ObjectUtil.isPropertyNull(loginInfo)) {
-
             HttpUtil.replyToClient(response, LoginResultBuilder.<LoginResult>paramsError());
-            return null;
-        }
-
-        return loginInfo;
-    }
-
-    @RequestMapping("/login")
-    @ResponseBody
-    public void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        LoginInfo loginInfo = checkParam(request, response);
-        if (loginInfo == null) {
             return;
         }
         UserInfo userInfo = loginService.selectByName(loginInfo.getUsername());
-        if (userInfo == null){
+        if (userInfo == null) {
             HttpUtil.replyToClient(response, LoginResultBuilder.<LoginResult>noUser());
-        }else if (userInfo.getPassword().equals(loginInfo.getPassword())) {
+        } else if (userInfo.getPassword().equals(loginInfo.getPassword())) {
             doLogin(response, userInfo, loginInfo.getAppId());
         } else {
             HttpUtil.replyToClient(response, LoginResultBuilder.<LoginResult>passwordError());
         }
     }
 
-    @RequestMapping("/register")
+    @RequestMapping("/register.do")
     @ResponseBody
-    public void register(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void register(HttpServletRequest request, HttpServletResponse response, @RequestBody LoginInfo loginInfo) throws IOException {
         String ip = HttpUtil.getIpAddress(request);
-        LoginInfo loginInfo = checkParam(request, response);
-        if (loginInfo == null) {
+        if (ObjectUtil.isPropertyNull(loginInfo)) {
+            HttpUtil.replyToClient(response, LoginResultBuilder.<LoginResult>paramsError());
             return;
         }
 
@@ -113,15 +98,14 @@ public class LoginController {
     }
 
 
-    @RequestMapping("/test")
+//    @Autowired
+//    private GameInfoMapper gameInfoMapper;
+
+    @RequestMapping("/test.do")
     @ResponseBody
     public void test(HttpServletRequest request, HttpServletResponse response) {
-        UserInfo userInfo = loginService.selectByName("123");
-        if (userInfo == null) {
-            Log.i("null");
-        } else {
-            Log.i("not null");
-        }
+//        List<GameInfo> all = gameInfoMapper.findAll();
+//        int i = 1;
     }
 
 

@@ -28,13 +28,16 @@
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
         <!--生成Dao类存放位置-->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.zsdk.server.dao" targetProject="./tmp">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.zsdk.server.dao" targetProject="../src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
         <!--生成对应表及类名-->
         <table tableName="user_info" domainObjectName="UserInfo" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
-            <generatedKey column="id" sqlStatement="MySql" identity="true" /> 
+            <generatedKey column="uid" sqlStatement="MySql" identity="true" /> 
+        </table>
 
+         <table tableName="game" domainObjectName="GameInfo" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
+            <generatedKey column="app_id" sqlStatement="MySql" identity="true" /> 
         </table>
 
     </context>

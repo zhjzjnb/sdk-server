@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zsdk.server.dao.GameInfoMapper">
+  <resultMap id="BaseResultMap" type="com.zsdk.server.model.GameInfo">
+    <id column="app_id" jdbcType="INTEGER" property="appId" />
+    <result column="app_key" jdbcType="VARCHAR" property="appKey" />
+    <result column="app_secret" jdbcType="VARCHAR" property="appSecret" />
+    <result column="public_key" jdbcType="VARCHAR" property="publicKey" />
+    <result column="private_key" jdbcType="VARCHAR" property="privateKey" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="game_name" jdbcType="VARCHAR" property="gameName" />
+    <result column="pay_callback" jdbcType="VARCHAR" property="payCallback" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    app_id, app_key, app_secret, public_key, private_key, create_time, game_name, pay_callback
+  </sql>
+
+  <select id="findAll" resultMap="BaseResultMap">
+    select * from game
+  </select>
+
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from game
+    where app_id = #{appId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from game
+    where app_id = #{appId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.zsdk.server.model.GameInfo">
+    <selectKey keyProperty="appId" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into game (app_key, app_secret, public_key,
+    private_key, create_time, game_name,
+    pay_callback)
+    values (#{appKey,jdbcType=VARCHAR}, #{appSecret,jdbcType=VARCHAR}, #{publicKey,jdbcType=VARCHAR},
+    #{privateKey,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{gameName,jdbcType=VARCHAR},
+    #{payCallback,jdbcType=VARCHAR})
+  </insert>
+
+</mapper>
