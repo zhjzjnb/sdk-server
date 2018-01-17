@@ -1,0 +1,12 @@
+{
+  "systemName": "iOS",
+  "root": "0",
+  "deviceName": "MacBook Pro",
+  "platform": "ios",
+  "password": "pwd:2",
+  "appId": "1",
+  "username": "username:2",
+  "systemVersion": "11.0.1",
+  "sign": "cd507bd9381e86f7cb66993532596004",
+  "deviceModel": "iPhone"
+}

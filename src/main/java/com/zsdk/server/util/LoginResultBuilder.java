@@ -24,16 +24,13 @@ public class LoginResultBuilder {
     }
 
 
-    public static Result<LoginResult> doubleUser() {
-        return new Result<LoginResult>(DOUBLE_USER,"用户已存在");
+    public static <T> Result<T> doubleUser() {
+        return new Result<T>(DOUBLE_USER,"用户已存在");
     }
     public static <T> Result<T> noUser() {
         return new Result<T>(NO_USER,"用户不存在");
     }
-    public static Result<LoginResult> passwordError() {
-        return new Result<LoginResult>(PASSWORD_ERROR,"密码错误");
-    }
-
+    public static <T> Result<T> passwordError() { return new Result<T>(PASSWORD_ERROR,"密码错误");}
     public static <T> Result<T> paramsError() {
         return new Result<T>(PARAMS_ERROR,"参数错误");
     }

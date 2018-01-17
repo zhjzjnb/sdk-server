@@ -14,6 +14,9 @@ public class ObjectUtil {
 
 
     public static boolean isPropertyNull(Object obj) {
+        if (obj == null){
+            return true;
+        }
         boolean flag = false;
         try {
             for (Field f : obj.getClass().getDeclaredFields()) {

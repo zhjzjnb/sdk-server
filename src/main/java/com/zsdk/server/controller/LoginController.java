@@ -49,15 +49,13 @@ public class LoginController {
             Log.e("error url decode", e);
         }
 
-        Result<LoginResult> result = null;
-
         Gson json = new Gson();
         LoginInfo loginInfo = json.fromJson(str, LoginInfo.class);
         Log.i("[LoginController login]: " + str);
 
         if (ObjectUtil.isPropertyNull(loginInfo)) {
-            result = LoginResultBuilder.paramsError();
-            HttpUtil.replyToClient(response, result);
+
+            HttpUtil.replyToClient(response, LoginResultBuilder.<LoginResult>paramsError());
             return null;
         }
 
@@ -73,12 +71,12 @@ public class LoginController {
             return;
         }
         UserInfo userInfo = loginService.selectByName(loginInfo.getUsername());
-
-        if (userInfo.getPassword().equals(loginInfo.getPassword())) {
+        if (userInfo == null){
+            HttpUtil.replyToClient(response, LoginResultBuilder.<LoginResult>noUser());
+        }else if (userInfo.getPassword().equals(loginInfo.getPassword())) {
             doLogin(response, userInfo, loginInfo.getAppId());
-            return;
         } else {
-            HttpUtil.replyToClient(response, LoginResultBuilder.passwordError());
+            HttpUtil.replyToClient(response, LoginResultBuilder.<LoginResult>passwordError());
         }
     }
 
@@ -107,7 +105,7 @@ public class LoginController {
             loginService.insert(userInfo);
         } catch (Exception e) {
             success = false;
-            HttpUtil.replyToClient(response, LoginResultBuilder.doubleUser());
+            HttpUtil.replyToClient(response, LoginResultBuilder.<LoginResult>doubleUser());
         }
         if (success) {
             doLogin(response, userInfo, loginInfo.getAppId());
