@@ -63,9 +63,10 @@
         pwd = $.md5(pwd);
 
         $.post('<%=basePath%>/admin/doLogin', {username: username, password: pwd}, function (result) {
-            if (result.state == 1) {
+            console.log(result);
+            if (result.state == 0) {
 
-                location.href = "<%=basePath%>/admin/index"
+                location.href = "<%=basePath%>"
 
             } else {
                 alert(result.msg)
