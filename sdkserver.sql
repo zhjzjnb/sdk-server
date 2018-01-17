@@ -11,11 +11,27 @@
  Target Server Version : 50635
  File Encoding         : utf-8
 
- Date: 01/16/2018 23:21:16 PM
+ Date: 01/17/2018 22:23:09 PM
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+--  Table structure for `game`
+-- ----------------------------
+DROP TABLE IF EXISTS `game`;
+CREATE TABLE `game` (
+  `app_id` int(11) NOT NULL AUTO_INCREMENT,
+  `app_key` varchar(255) NOT NULL,
+  `app_secret` varchar(255) NOT NULL,
+  `public_key` varchar(1024) NOT NULL,
+  `private_key` varchar(1024) NOT NULL,
+  `create_time` datetime NOT NULL,
+  `game_name` varchar(255) NOT NULL,
+  `pay_callback` varchar(255) NOT NULL,
+  PRIMARY KEY (`app_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 --  Table structure for `user_info`
