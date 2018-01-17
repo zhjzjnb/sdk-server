@@ -14,6 +14,6 @@ public class AdminController {
     @RequestMapping("/doLogin")
     private String doLogin(){
         Log.i("doLogin");
-        return "admin/test";
+        return "test";
     }
 }
