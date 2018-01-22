@@ -56,7 +56,7 @@
 
       <div title="操作" selected="true">
         <ul>
-          <li><a class="easyui-linkbutton c1 u8_menu"  href="javascript:addTab('tabId_account','游戏信息','<%=basePath%>/data/showByDate');">账号信息总览</a></li>
+          <li><a class="easyui-linkbutton c1 u8_menu"  href="javascript:addTab('tabId_account','游戏信息','<%=basePath%>/games/showGames');">游戏总览</a></li>
           <li><a class="easyui-linkbutton c1 u8_menu"  href="javascript:addTab('tabId_roles','角色管理','<%=basePath%>/admin/adminRoles');">角色管理</a></li>
         </ul>
       </div>
