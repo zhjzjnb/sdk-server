@@ -8,50 +8,47 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     String path = request.getContextPath();
-    String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path;
+    String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
 
 %>
 <base href="<%=basePath%>">
 <html>
 <head>
+    <title></title>
 
-    <!-- 引入JQuery -->
-    <script type="text/javascript" src="${pageContext.request.contextPath}/jquery-easyui/jquery.min.js"></script>
-    <!-- 引入EasyUI -->
-    <script type="text/javascript" src="${pageContext.request.contextPath}/jquery-easyui/jquery.easyui.min.js"></script>
-    <!-- 引入EasyUI的中文国际化js，让EasyUI支持中文 -->
-    <script type="text/javascript"
-            src="${pageContext.request.contextPath}/jquery-easyui/locale/easyui-lang-zh_CN.js"></script>
+    <link rel="stylesheet" type="text/css" href="<%=basePath%>/js/plugins/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="<%=basePath%>/js/plugins/easyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="<%=basePath%>/js/plugins/easyui/themes/color.css">
+    <link rel="stylesheet" type="text/css" href="<%=basePath%>/css/u8server.css">
 
+    <script type="text/javascript" src="<%=basePath%>/js/plugins/easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="<%=basePath%>/js/plugins/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="<%=basePath%>/js/plugins/easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="<%=basePath%>/js/jquery.md5.js"></script>
 
-    <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.md5.js"></script>
-
-    <!-- 引入EasyUI的样式文件-->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/jquery-easyui/themes/default/easyui.css"
-          type="text/css"/>
-    <!-- 引入EasyUI的图标样式文件-->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/jquery-easyui/themes/icon.css" type="text/css"/>
-
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/login.css">
-
-
-    <title>登录</title>
 </head>
 <body>
-<div class="login_wrap">
-    <div style="overflow: hidden;height:100%;display: block;">
-        <div style="width: 680px; height: 100px; margin-left:auto;margin-right: auto; margin-top: 180px;">
-        </div>
-        <div style="margin-left:auto;margin-right: auto;margin-top: 30px;">
-            <form id="login2" method="post">
-                <label>用户名：<input id="username" type="text" name="userName"/></label>
-                <label style="margin-top: 20px;">密　码：<input id="pwd" type="password" name="pass"/></label>
-                <button id="btnLogin" type="button" onclick="javascript:login();">登　录</button>
-            </form>
-        </div>
-    </div>
+<div style="height: 220px;display: block;">
 
+</div>
 
+<div id="dialog_add" class="easyui-dialog" title="用户登录"
+     closed="false" buttons="#dlg-buttons" style="height: 180px;width:340px;margin: 0 auto;">
+    <form id="fm" method="post" novalidate>
+        <div class="u8_form_row" style="margin-top: 15px">
+            <label style="width: 50px">用户名：</label>
+            <input id = "username" type="text" class="easyui-textbox" name="username" maxlength="255"  />
+        </div>
+
+        <div class="u8_form_row" >
+            <label style="width: 50px">密　码：</label>
+            <input id="pwd" type="password" class="easyui-textbox" name="password" maxlength="255" />
+        </div>
+
+    </form>
+</div>
+<div id="dlg-buttons">
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" onclick="login();" style="width:90px">登　录</a>
 </div>
 
 <script type="text/javascript">
@@ -86,6 +83,6 @@
 
 </script>
 
-
 </body>
 </html>
+

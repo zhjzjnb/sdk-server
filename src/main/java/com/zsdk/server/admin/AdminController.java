@@ -33,10 +33,29 @@ public class AdminController {
             result.setState(Configuration.RESULT_CODE_SUCCESS);
             result.setMsg(Configuration.RESULT_MSG_SUCCESS);
             request.getSession().setAttribute("loginName", adminUser.getUsername());
+//            request.getSession().setAttribute("password", adminUser.getPassword());
         }else {
             result.setState(Configuration.RESULT_CODE_FAIL);
             result.setMsg(Configuration.RESULT_MSG_FAIL);
         }
         return result;
     }
+
+    @RequestMapping(path = "/doExit", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Result exit(HttpServletRequest request) {
+        request.getSession().removeAttribute("loginName");
+        Result result = new Result();
+        result.setState(Configuration.RESULT_CODE_SUCCESS);
+        result.setMsg(Configuration.RESULT_MSG_SUCCESS);
+        return result;
+    }
+
+
+    @RequestMapping(path = "/adminRoles", method = RequestMethod.GET)
+    public String showByDate() {
+        return "adminRoles";
+    }
+
+
 }
