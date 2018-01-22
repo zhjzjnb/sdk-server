@@ -48,7 +48,7 @@
     </form>
 </div>
 <div id="dlg-buttons">
-    <a href="javascript:void(0)" class="easyui-linkbutton c6" onclick="login();" style="width:90px">登　录</a>
+    <a href="javascript:void(0)" id="btnLogin" class="easyui-linkbutton c6" onclick="login();" style="width:90px">登　录</a>
 </div>
 
 <script type="text/javascript">
@@ -66,20 +66,17 @@
                 location.href = "<%=basePath%>"
 
             } else {
-                alert(result.msg)
+//                alert(result.msg)
+
+                $.messager.show({
+                    title:'操作提示',
+                    msg:result.msg
+                })
             }
 
         }, 'json');
-
-
     }
 
-
-    $("#pwd").keyup(function (event) {
-        if (event.keyCode == 13) {
-            $("#btnLogin").click();
-        }
-    });
 
 </script>
 

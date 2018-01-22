@@ -288,15 +288,15 @@
       pageList:[10,20,50,100],
       showFooter:true,
       columns:[[
-        {field:'appID', title:'AppID', width:40, sortable:true},
-        {field:'name', title:'游戏名称', width:40, sortable:true},
-        {field:'appkey', title:'AppKey', width:60, sortable:true},
+        {field:'appId', title:'AppID', width:40, sortable:true},
+        {field:'gameName', title:'游戏名称', width:40, sortable:true},
+        {field:'appKey', title:'AppKey', width:60, sortable:true},
         {field:'appSecret', title:'AppSecret', width:60, sortable:true},
-        {field:'appRSAPubKey', title:'PayPublicKey', width:100, sortable:true},
-        {field:'appRSAPriKey', title:'PayPrivateKey', width:100, sortable:true},
+        {field:'publicKey', title:'PayPublicKey', width:100, sortable:true},
+        {field:'privateKey', title:'PayPrivateKey', width:100, sortable:true},
         {field:'payCallback', title:'支付回调地址', width:80, sortable:true},
-        {field:'msdkPayCallback', title:'应用宝回调地址', width:80, sortable:true},
-        {field:'payCallbackDebug', title:'支付回调调试地址', width:80, sortable:true}
+        {field:'createTime', title:'创建时间', width:80, sortable:true},
+
       ]],
       toolbar:'#easyui_toolbar'
     });

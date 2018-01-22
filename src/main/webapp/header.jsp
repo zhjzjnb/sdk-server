@@ -7,8 +7,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-  String path = request.getContextPath();
-  String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path;
+    String path = request.getContextPath();
+    String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path;
 
 %>
 <base href="<%=basePath%>">
@@ -30,35 +30,34 @@
 </head>
 <body>
 
-  <div class="u8_header">
-      <div class="u8_logo">
+<div class="u8_header">
+    <div class="u8_logo">
 
-      </div>
-      <div class="u8_title">
-       zsdk管理后台
-      </div>
-      <div style="float:right;color: #ffffff;font-size: 12px;margin-top: 5px;margin-right: 10px;">
-          <span>当前登录用户：</span><span>${sessionScope.loginName}</span>
-          <span><a href="javascript:void(0)" onclick="exit();" style="width:90px;color:#ffffff">[退出]</a></span>
-      </div>
-  </div>
+    </div>
+    <div class="u8_title">
+        zsdk管理后台
+    </div>
+    <div style="float:right;color: #ffffff;font-size: 12px;margin-top: 5px;margin-right: 10px;">
+        <span>当前登录用户：</span><span>${sessionScope.loginName}</span>
+        <span><a href="javascript:void(0)" onclick="exit();" style="width:90px;color:#ffffff">[退出]</a></span>
+    </div>
+</div>
 
-  <script type="text/javascript">
+<script type="text/javascript">
 
-      function exit(){
+    function exit() {
 
-          $.post('<%=basePath%>/admin/doExit', {}, function(result){
-              if (result.state == 1) {
+        $.post('<%=basePath%>/admin/doExit', {}, function (result) {
+            if (result.state == 0) {
+                location.href = "<%=basePath%>"
 
-                  location.href="<%=basePath%>/login.jsp"
+            }
 
-              }
-
-          }, 'json');
-      }
+        }, 'json');
+    }
 
 
-  </script>
+</script>
 
 </body>
 </html>

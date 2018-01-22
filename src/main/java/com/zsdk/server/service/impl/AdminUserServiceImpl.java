@@ -1,6 +1,8 @@
 package com.zsdk.server.service.impl;
 
+import com.zsdk.server.dao.AdminInfoMapper;
 import com.zsdk.server.dao.UserInfoMapper;
+import com.zsdk.server.model.AdminInfo;
 import com.zsdk.server.model.AdminUser;
 import com.zsdk.server.model.UserInfo;
 import com.zsdk.server.service.AdminUserService;
@@ -17,9 +19,12 @@ import java.util.Map;
 @Service
 public class AdminUserServiceImpl implements AdminUserService {
 
+    @Autowired
+    AdminInfoMapper adminInfoMapper;
 
     @Override
     public boolean isValid(AdminUser adminUser) {
-        return true;
+        AdminInfo exits = adminInfoMapper.selectByName(adminUser.getUsername());
+        return exits == null ? false : exits.getPassword().equals(adminUser.getPassword());
     }
 }
