@@ -56,7 +56,10 @@
   </div>
 
   <div id="dialog_add" class="easyui-dialog u8_form"
-       closed="true" buttons="#dlg-buttons" style="height: 250px">
+       closed="true" buttons="#dlg-buttons" style="height: 250px"
+       data-options="iconCls:'icon-save',resizable:true,modal:true"
+
+          >
     <div class="ftitle">游戏信息</div>
     <form id="fm" method="post" novalidate>
       <input type="hidden" name="appId" />
@@ -69,8 +72,6 @@
         <label >支付回调地址：</label>
         <input type="text" class="easyui-textbox" name="payCallback" maxlength="1024" novalidate />
       </div>
-
-
     </form>
   </div>
   <div id="dlg-buttons">
@@ -79,52 +80,7 @@
   </div>
 
 
-  <div id="dialog_detail" class="easyui-dialog u8_form"
-       closed="true" buttons="#dlg-buttons-edit" >
-    <div class="ftitle">游戏详细信息</div>
-    <form id="fm_edit" method="post" novalidate>
 
-      <div class="u8_form_row">
-        <label >游戏名称：</label>
-        <input type="text" class="easyui-textbox" name="name" readonly="readonly" novalidate/>
-      </div>
-
-      <div class="u8_form_row">
-        <label >appId：</label>
-        <input type="text" class="easyui-textbox" name="appId" readonly="readonly" novalidate/>
-      </div>
-
-      <div class="u8_form_row">
-        <label >appKey：</label>
-        <input type="text" class="easyui-textbox" name="appkey" readonly="readonly" novalidate/>
-      </div>
-
-      <div class="u8_form_row">
-        <label >appSecret：</label>
-        <input type="text" class="easyui-textbox" name="appSecret" readonly="readonly" novalidate/>
-      </div>
-
-      <div class="u8_form_row">
-        <label >publicKey：</label>
-        <input type="text" class="easyui-textbox" name="appRSAPubKey" readonly="readonly" novalidate/>
-      </div>
-
-      <div class="u8_form_row">
-        <label >privateKey：</label>
-        <input type="text" class="easyui-textbox" name="appRSAPriKey" readonly="readonly" novalidate/>
-      </div>
-
-      <div class="u8_form_row">
-        <label >支付回调地址：</label>
-        <input type="text" class="easyui-textbox" name="payCallback" readonly="readonly" novalidate/>
-      </div>
-
-    </form>
-  </div>
-  <div id="dlg-buttons-edit">
-
-    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="javascript:$('#dialog_detail').dialog('close')" style="width:90px">确 定</a>
-  </div>
 
   <script type="text/javascript">
 
@@ -225,10 +181,6 @@
     }
 
 
-
-    function doSearch(value, name){
-      alert("value:"+value+";name:"+name);
-    }
 
     $("#games").datagrid({
       height:430,
