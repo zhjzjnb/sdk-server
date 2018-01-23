@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,6 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 public class CacheManager {
+
     private Map<Integer, GameInfo> games;
 
     private static final CacheManager _instance = new CacheManager();
@@ -59,5 +61,10 @@ public class CacheManager {
             games.put(game.getAppId(), game);
         }
         Log.i("Load games :" + games.size());
+    }
+
+    public synchronized List<GameInfo> getGameList(){
+
+        return new ArrayList<GameInfo>(games.values());
     }
 }
