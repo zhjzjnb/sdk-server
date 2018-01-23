@@ -45,13 +45,13 @@
          icon="icon-remove" onclick="javascript:deleteGame();">删除</a>
     </div>
 
-    <div id="tb" style="float: right;">
-      <input id="search_box" class="easyui-searchbox" style="width: 250px"  data-options="searcher:doSearch,prompt:'请输入查询词',menu:'#search_menu'" />
-      <div id="search_menu" style="width:120px">
-        <div data-options="name:'game_name'">游戏名称</div>
-        <div data-options="name:'app_id'">AppID</div>
-      </div>
-    </div>
+    <%--<div id="tb" style="float: right;">--%>
+      <%--<input id="search_box" class="easyui-searchbox" style="width: 250px"  data-options="searcher:doSearch,prompt:'请输入查询词',menu:'#search_menu'" />--%>
+      <%--<div id="search_menu" style="width:120px">--%>
+        <%--<div data-options="name:'game_name'">游戏名称</div>--%>
+        <%--<div data-options="name:'app_id'">appId</div>--%>
+      <%--</div>--%>
+    <%--</div>--%>
 
   </div>
 
@@ -90,43 +90,33 @@
       </div>
 
       <div class="u8_form_row">
-        <label >AppID：</label>
+        <label >appId：</label>
         <input type="text" class="easyui-textbox" name="appId" readonly="readonly" novalidate/>
       </div>
 
       <div class="u8_form_row">
-        <label >AppKey：</label>
+        <label >appKey：</label>
         <input type="text" class="easyui-textbox" name="appkey" readonly="readonly" novalidate/>
       </div>
 
       <div class="u8_form_row">
-        <label >AppSecret：</label>
+        <label >appSecret：</label>
         <input type="text" class="easyui-textbox" name="appSecret" readonly="readonly" novalidate/>
       </div>
 
       <div class="u8_form_row">
-        <label >PublicKey：</label>
+        <label >publicKey：</label>
         <input type="text" class="easyui-textbox" name="appRSAPubKey" readonly="readonly" novalidate/>
       </div>
 
       <div class="u8_form_row">
-        <label >PrivateKey：</label>
+        <label >privateKey：</label>
         <input type="text" class="easyui-textbox" name="appRSAPriKey" readonly="readonly" novalidate/>
       </div>
 
       <div class="u8_form_row">
         <label >支付回调地址：</label>
         <input type="text" class="easyui-textbox" name="payCallback" readonly="readonly" novalidate/>
-      </div>
-
-      <div class="u8_form_row">
-        <label >支付回调地址(应用宝)：</label>
-        <input type="text" class="easyui-textbox" name="msdkPayCallback" readonly="readonly" novalidate/>
-      </div>
-
-      <div class="u8_form_row">
-        <label>支付回调(调试)：</label>
-        <input type="text" class="easyui-textbox" name="payCallbackDebug" readonly="readonly" novalidate/>
       </div>
 
     </form>
@@ -149,7 +139,7 @@
 
       $('#fm').form('clear');
 
-      url = '<%=basePath%>/games/saveGame';
+      url = '<%=basePath%>/games/addGame';
 
     }
 
@@ -258,10 +248,10 @@
       columns:[[
         {field:'appId', title:'appId', width:40, sortable:true},
         {field:'gameName', title:'游戏名称', width:40, sortable:true},
-        {field:'appKey', title:'AppKey', width:60, sortable:true},
-        {field:'appSecret', title:'AppSecret', width:60, sortable:true},
-        {field:'publicKey', title:'PayPublicKey', width:100, sortable:true},
-        {field:'privateKey', title:'PayPrivateKey', width:100, sortable:true},
+        {field:'appKey', title:'appKey', width:60, sortable:true},
+        {field:'appSecret', title:'appSecret', width:60, sortable:true},
+        {field:'publicKey', title:'payPublicKey', width:100, sortable:true},
+        {field:'privateKey', title:'payPrivateKey', width:100, sortable:true},
         {field:'payCallback', title:'支付回调地址', width:80, sortable:true},
         {field:'createTime', title:'创建时间', width:80, sortable:true},
 
