@@ -38,11 +38,7 @@
 
     <div class="datagrid-btn-separator"></div>
 
-    <div style="float: left;">
-      <a class="easyui-linkbutton" plain="true" icon="icon-filter" onclick="javascript:showDetailDialog();">详细信息</a>
-    </div>
 
-    <div class="datagrid-btn-separator"></div>
 
     <div style="float: left;">
       <a class="easyui-linkbutton" plain="true"
@@ -63,7 +59,7 @@
        closed="true" buttons="#dlg-buttons" style="height: 250px">
     <div class="ftitle">游戏信息</div>
     <form id="fm" method="post" novalidate>
-      <input type="hidden" name="appID" />
+      <input type="hidden" name="appId" />
       <div class="u8_form_row">
         <label >游戏名称：</label>
         <input type="text" class="easyui-textbox" name="name" maxlength="255" required="false" />
@@ -74,15 +70,6 @@
         <input type="text" class="easyui-textbox" name="payCallback" maxlength="1024" novalidate />
       </div>
 
-      <div class="u8_form_row">
-        <label >支付回调地址(应用宝)：</label>
-        <input type="text" class="easyui-textbox" name="msdkPayCallback" maxlength="1024" novalidate />
-      </div>
-
-      <div class="u8_form_row">
-        <label>支付回调(调试)：</label>
-        <input type="text" class="easyui-textbox" name="payCallbackDebug" maxlength="1024" novalidate />
-      </div>
 
     </form>
   </div>
@@ -104,7 +91,7 @@
 
       <div class="u8_form_row">
         <label >AppID：</label>
-        <input type="text" class="easyui-textbox" name="appID" readonly="readonly" novalidate/>
+        <input type="text" class="easyui-textbox" name="appId" readonly="readonly" novalidate/>
       </div>
 
       <div class="u8_form_row">
@@ -189,38 +176,18 @@
       }
     }
 
-    function showDetailDialog(){
 
-      $("#dialog_detail").window({
-        top:($(window).height() - 300) * 0.5,
-        left:($(window).width() - 400) * 0.5
-      });
-
-
-      var row = $('#games').datagrid('getSelected');
-      if(row){
-
-        $("#dialog_detail").dialog('open').dialog('setTitle', '游戏信息');
-        $('#fm_edit').form('load', row);
-
-      }else{
-        $.messager.show({
-          title:'操作提示',
-          msg:'请选择一条记录'
-        })
-      }
-    }
 
     function deleteGame(){
       var row = $('#games').datagrid('getSelected');
       if(row){
         $.messager.confirm(
           '操作确认',
-          '确定要删除该渠道商吗？(操作不可恢复)',
+          '确定要删除该游戏吗？(操作不可恢复)',
           function(r){
             if(r){
-              $.post('<%=basePath%>/games/removeGame', {currAppID:row.appID}, function(result){
-                if (result.state == 1) {
+              $.post('<%=basePath%>/games/removeGame', {appId:row.appId}, function(result){
+                if (result.state == 0) {
                   $('#dialog_add').dialog('close');
                   $("#games").datagrid('reload');
                 }
@@ -250,9 +217,10 @@
           return $(this).form('validate');
         },
         success:function(result){
+          console.log(result)
           var result = eval('('+result+')');
 
-          if (result.state == 1) {
+          if (result.state == 0) {
             $('#dialog_add').dialog('close');
             $("#games").datagrid('reload');
           }
@@ -276,7 +244,7 @@
       height:430,
       url:'<%=basePath%>/games/getAllGames',
       method:'POST',
-      idField:'appID',
+      idField:'appId',
       striped:true,
       fitColumns:true,
       singleSelect:true,
@@ -285,10 +253,10 @@
       nowrap:true,
       loadMsg:'数据加载中...',
       pageSize:10,
-      pageList:[10,20,50,100],
+      pageList:[10,20,50],
       showFooter:true,
       columns:[[
-        {field:'appId', title:'AppID', width:40, sortable:true},
+        {field:'appId', title:'appId', width:40, sortable:true},
         {field:'gameName', title:'游戏名称', width:40, sortable:true},
         {field:'appKey', title:'AppKey', width:60, sortable:true},
         {field:'appSecret', title:'AppSecret', width:60, sortable:true},

@@ -11,5 +11,7 @@ public interface GameInfoMapper {
 
     GameInfo selectByPrimaryKey(Integer appId);
 
+    void update(GameInfo record);
+
     List<GameInfo> findAll();
 }

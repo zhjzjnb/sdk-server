@@ -24,15 +24,15 @@ public class LoginInterceptor implements HandlerInterceptor {
 
         String reqURI = request.getRequestURI();
         Log.i("reqURI:"+reqURI);
-        if (reqURI.contains("doLogin")) {
-            return true;
-        } else {
-            HttpSession session = request.getSession();
-            Object obj = session.getAttribute("loginName");
-            if (null == obj || obj.toString().isEmpty()) {
-                response.sendRedirect("admin/login.jsp");
-            }
-        }
+//        if (reqURI.contains("doLogin")) {
+//            return true;
+//        } else {
+//            HttpSession session = request.getSession();
+//            Object obj = session.getAttribute("loginName");
+//            if (null == obj || obj.toString().isEmpty()) {
+//                response.sendRedirect("admin/login.jsp");
+//            }
+//        }
         return true;
     }
 

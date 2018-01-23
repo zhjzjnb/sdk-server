@@ -42,4 +42,12 @@
     #{payCallback,jdbcType=VARCHAR})
   </insert>
 
+  <update id="update" parameterType="com.zsdk.server.model.GameInfo">
+    update game set
+    game_name = #{gameName,jdbcType=VARCHAR},
+    pay_callback = #{payCallback,jdbcType=VARCHAR}
+    where app_id = #{appId,jdbcType=INTEGER}
+  </update>
+
+
 </mapper>

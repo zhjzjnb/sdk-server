@@ -85,4 +85,9 @@ public class HttpUtil {
         }
     }
 
+
+    public static void optionSuccess(com.zsdk.server.bean.Result result){
+        result.setState(0);
+        result.setMsg("success");
+    }
 }

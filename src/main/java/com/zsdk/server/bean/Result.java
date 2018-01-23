@@ -3,8 +3,8 @@ package com.zsdk.server.bean;
 
 public class Result {
 
-    private int state;
-    private String msg;
+    private int state = -1;
+    private String msg = "error";
 
     public int getState() {
         return state;
