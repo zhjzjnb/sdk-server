@@ -33,15 +33,11 @@ public class RedisUtil {
 
     public boolean setToken(String token, String value, int expire) {
         Jedis jedis = jedisPool.getResource();
-        if (jedis.exists(token)){
+
+        long code = jedis.setnx(token, value);
+        if (code == 0){
             return false;
         }
-        jedis.watch(token);
-        Transaction transaction = jedis.multi();
-        transaction.set(token, value);
-        transaction.expire(token, expire);
-
-        List<Object> list = transaction.exec();
-        return list.size() > 0;
+        return jedis.expire(token, expire) == 1;
     }
 }
