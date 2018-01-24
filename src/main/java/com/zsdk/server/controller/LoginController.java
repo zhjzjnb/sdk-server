@@ -12,9 +12,7 @@ import com.zsdk.server.model.UserInfo;
 import com.zsdk.server.service.LoginService;
 import com.zsdk.server.util.*;
 import net.sf.json.JSONObject;
-import okhttp3.Call;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -23,10 +21,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.print.attribute.standard.Media;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.awt.*;
+
 import java.util.Date;
 
 /**
@@ -140,30 +138,31 @@ public class LoginController {
 //        int i = 1;
     }
 
-
-    @RequestMapping(path = "/check.do", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+//    todo
+//这个方法 如果能接受application/x-www-form-urlencoded 和 application/json
+//    但是application/json 对象不能注入tokenCheck,即使设置了 produces = MediaType.APPLICATION_JSON_UTF8_VALUE
+//  如果加le@RequestBody,只能接收json 对象，也能注入tokenCheck
+//    .......
+    @RequestMapping(path = "/check.do", method = RequestMethod.POST)
     @ResponseBody
-    public void check(HttpServletResponse response, TokenCheck tokenCheck) {
+    public Result check(TokenCheck tokenCheck) {
         Result result = new Result();
         if (ObjectUtil.isPropertyNull(tokenCheck)) {
-            HttpUtil.replyToServer(response, result);
-            return;
+            return result;
         }
         String token = tokenCheck.getToken();
         String key = Configuration.CLIENT_LOGIN_TOKEN_PREFIX + token;
         String uid = redisUtil.get(key);
         if (uid == null) {
-            result.setMsg("token过期");
+            result.setMsg("token不存在");
             result.setState(-2);
-            HttpUtil.replyToServer(response, result);
-            return;
+            return result;
         }
         GameInfo gameInfo = CacheManager.getInstance().getGame(Integer.parseInt(tokenCheck.getAppId()));
         if (gameInfo == null) {
             result.setMsg("游戏不存在");
             result.setState(-3);
-            HttpUtil.replyToServer(response, result);
-            return;
+            return result;
         }
         String content = tokenCheck.getAppId() + gameInfo.getAppKey() + token;
         String sign = EncryptUtil.md5(content);
@@ -171,7 +170,7 @@ public class LoginController {
             HttpUtil.optionSuccess(result);
             redisUtil.del(key);
         }
-        HttpUtil.replyToServer(response, result);
+        return result;
     }
 
 }
