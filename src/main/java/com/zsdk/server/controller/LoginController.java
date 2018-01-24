@@ -1,10 +1,11 @@
 package com.zsdk.server.controller;
 
 
-import com.zsdk.server.bean.Result;
+
 import com.zsdk.server.cache.CacheManager;
 import com.zsdk.server.client.LoginInfo;
 import com.zsdk.server.client.LoginResult;
+import com.zsdk.server.client.Result;
 import com.zsdk.server.client.TokenCheck;
 import com.zsdk.server.config.Configuration;
 import com.zsdk.server.model.GameInfo;
@@ -25,9 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by zhj on 2017/3/14.
@@ -50,7 +49,7 @@ public class LoginController {
         return EncryptUtil.md5(content).equals(loginInfo.getSign());
     }
 
-    private com.zsdk.server.client.Result<LoginResult> doLogin(UserInfo userInfo, String appId) {
+    private Result<LoginResult> doLogin(UserInfo userInfo, String appId) {
 
         GameInfo gameInfo = CacheManager.getInstance().getGame(Integer.parseInt(appId));
         String token = EncryptUtil.genToken(userInfo, gameInfo.getAppKey());
@@ -71,7 +70,7 @@ public class LoginController {
 
     @RequestMapping(value = "/login.do", method = RequestMethod.POST)
     @ResponseBody
-    public com.zsdk.server.client.Result<LoginResult> login(@RequestBody LoginInfo loginInfo) {
+    public Result<LoginResult> login(@RequestBody LoginInfo loginInfo) {
         if (ObjectUtil.isPropertyNull(loginInfo)) {
             return LoginResultBuilder.<LoginResult>paramsError();
         }
@@ -91,7 +90,7 @@ public class LoginController {
 
     @RequestMapping("/register.do")
     @ResponseBody
-    public com.zsdk.server.client.Result<LoginResult> register(HttpServletRequest request, @RequestBody LoginInfo loginInfo) {
+    public Result<LoginResult> register(HttpServletRequest request, @RequestBody LoginInfo loginInfo) {
         String ip = HttpUtil.getIpAddress(request);
         if (ObjectUtil.isPropertyNull(loginInfo)) {
             return LoginResultBuilder.<LoginResult>paramsError();
@@ -155,8 +154,13 @@ public class LoginController {
 //    .......
     @RequestMapping(path = "/check.do", method = RequestMethod.POST)
     @ResponseBody
-    public Result check(TokenCheck tokenCheck) {
-        Result result = new Result();
+    public Result<Map<String,String>> check(TokenCheck tokenCheck) {
+
+        Map<String,String> map = new HashMap<String, String>();
+
+        Result<Map<String,String>> result = new Result<Map<String,String>>();
+        result.setMsg("unknown");
+        result.setCode(-1);
         if (ObjectUtil.isPropertyNull(tokenCheck)) {
             return result;
         }
@@ -165,19 +169,22 @@ public class LoginController {
         String uid = redisUtil.get(key);
         if (uid == null) {
             result.setMsg("token不存在");
-            result.setState(-2);
+            result.setCode(-2);
             return result;
         }
         GameInfo gameInfo = CacheManager.getInstance().getGame(Integer.parseInt(tokenCheck.getAppId()));
         if (gameInfo == null) {
             result.setMsg("游戏不存在");
-            result.setState(-3);
+            result.setCode(-3);
             return result;
         }
         String content = tokenCheck.getAppId() + gameInfo.getAppKey() + token;
         String sign = EncryptUtil.md5(content);
         if (sign.equals(tokenCheck.getSign())) {
-            HttpUtil.optionSuccess(result);
+            result.setMsg("success");
+            result.setCode(0);
+            map.put("uid",uid);
+            result.setData(map);
             redisUtil.del(key);
         }
         return result;
