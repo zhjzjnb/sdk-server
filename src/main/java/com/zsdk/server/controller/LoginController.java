@@ -1,7 +1,6 @@
 package com.zsdk.server.controller;
 
 
-
 import com.zsdk.server.cache.CacheManager;
 import com.zsdk.server.client.LoginInfo;
 import com.zsdk.server.client.LoginResult;
@@ -154,14 +153,12 @@ public class LoginController {
 //    .......
     @RequestMapping(path = "/check.do", method = RequestMethod.POST)
     @ResponseBody
-    public Result<Map<String,String>> check(TokenCheck tokenCheck) {
-
-        Map<String,String> map = new HashMap<String, String>();
-
-        Result<Map<String,String>> result = new Result<Map<String,String>>();
-        result.setMsg("unknown");
-        result.setCode(-1);
+    public Result<Map<String, String>> check(@RequestBody TokenCheck tokenCheck) {
+        Map<String, String> map = new HashMap<String, String>();
+        Result<Map<String, String>> result = new Result<Map<String, String>>();
         if (ObjectUtil.isPropertyNull(tokenCheck)) {
+            result.setMsg("参数错误");
+            result.setCode(-1);
             return result;
         }
         String token = tokenCheck.getToken();
@@ -183,7 +180,7 @@ public class LoginController {
         if (sign.equals(tokenCheck.getSign())) {
             result.setMsg("success");
             result.setCode(0);
-            map.put("uid",uid);
+            map.put("uid", uid);
             result.setData(map);
             redisUtil.del(key);
         }
