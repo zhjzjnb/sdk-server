@@ -25,7 +25,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by zhj on 2017/3/14.
@@ -40,16 +42,22 @@ public class LoginController {
     private RedisUtil redisUtil;
 
 
-    private void doLogin(HttpServletResponse response, UserInfo userInfo, String appId) {
+    private boolean checkSign(LoginInfo loginInfo) {
+        JSONObject json = JSONObject.fromObject(loginInfo);
+        List<String> keys = new ArrayList<String>(json.keySet());
+        keys.remove("sign");
+        String content = StringUtil.getSignData(json, keys, "&", "=") + "&" + Configuration.CLIENT_SIGN_KEY;
+        return EncryptUtil.md5(content).equals(loginInfo.getSign());
+    }
+
+    private com.zsdk.server.client.Result<LoginResult> doLogin(UserInfo userInfo, String appId) {
 
         GameInfo gameInfo = CacheManager.getInstance().getGame(Integer.parseInt(appId));
         String token = EncryptUtil.genToken(userInfo, gameInfo.getAppKey());
         boolean flag = redisUtil.setToken(Configuration.CLIENT_LOGIN_TOKEN_PREFIX + token, "" + userInfo.getUid(), Configuration.CLIENT_LOGIN_TOKEN_LAST_TIME);
 
-//        Log.i("token ok:"+String.valueOf(flag));
         if (!flag) {
-            HttpUtil.replyToClient(response, LoginResultBuilder.<LoginResult>multiError());
-            return;
+            return LoginResultBuilder.<LoginResult>multiError();
         }
 
         LoginResult loginResult = new LoginResult();
@@ -57,25 +65,27 @@ public class LoginController {
         loginResult.setUsername(userInfo.getUserName());
         loginResult.setPassword(userInfo.getPassword());
         loginResult.setToken(token);
-
-        HttpUtil.replyToClient(response, LoginResultBuilder.sucess(loginResult));
+        return LoginResultBuilder.sucess(loginResult);
     }
+
 
     @RequestMapping(value = "/login.do", method = RequestMethod.POST)
     @ResponseBody
-    public void login(HttpServletRequest request, HttpServletResponse response, @RequestBody LoginInfo loginInfo) {
-
+    public com.zsdk.server.client.Result<LoginResult> login(@RequestBody LoginInfo loginInfo) {
         if (ObjectUtil.isPropertyNull(loginInfo)) {
-            HttpUtil.replyToClient(response, LoginResultBuilder.<LoginResult>paramsError());
-            return;
+            return LoginResultBuilder.<LoginResult>paramsError();
+        }
+        if (!checkSign(loginInfo)) {
+            return LoginResultBuilder.<LoginResult>paramsError();
         }
         UserInfo userInfo = loginService.selectByName(loginInfo.getUsername());
         if (userInfo == null) {
-            HttpUtil.replyToClient(response, LoginResultBuilder.<LoginResult>noUser());
+            return LoginResultBuilder.<LoginResult>noUser();
         } else if (userInfo.getPassword().equals(loginInfo.getPassword())) {
-            doLogin(response, userInfo, loginInfo.getAppId());
+            return doLogin(userInfo, loginInfo.getAppId());
         } else {
-            HttpUtil.replyToClient(response, LoginResultBuilder.<LoginResult>passwordError());
+            return LoginResultBuilder.<LoginResult>passwordError();
+
         }
     }
 
@@ -123,7 +133,7 @@ public class LoginController {
             HttpUtil.replyToClient(response, LoginResultBuilder.<LoginResult>doubleUser());
         }
         if (success) {
-            doLogin(response, userInfo, loginInfo.getAppId());
+//            doLogin(response, userInfo, loginInfo.getAppId());
         }
     }
 
@@ -138,7 +148,7 @@ public class LoginController {
 //        int i = 1;
     }
 
-//    todo
+    //    todo
 //这个方法 如果能接受application/x-www-form-urlencoded 和 application/json
 //    但是application/json 对象不能注入tokenCheck,即使设置了 produces = MediaType.APPLICATION_JSON_UTF8_VALUE
 //  如果加le@RequestBody,只能接收json 对象，也能注入tokenCheck

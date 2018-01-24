@@ -21,9 +21,16 @@ public class ObjectUtil {
         try {
             for (Field f : obj.getClass().getDeclaredFields()) {
                 f.setAccessible(true);
-                if (f.get(obj) == null) {
+                Object tmp = f.get(obj);
+                if (tmp == null) {
                     flag = true;
                     break;
+                }
+                if (tmp instanceof String){
+                    if ( ((String)tmp).length() <= 0 ){
+                        flag = true;
+                        break;
+                    }
                 }
             }
         } catch (IllegalAccessException e) {
