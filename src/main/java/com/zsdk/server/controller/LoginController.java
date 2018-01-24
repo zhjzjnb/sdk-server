@@ -91,19 +91,19 @@ public class LoginController {
 
     @RequestMapping("/register.do")
     @ResponseBody
-    public void register(HttpServletRequest request, HttpServletResponse response, @RequestBody LoginInfo loginInfo) {
+    public com.zsdk.server.client.Result<LoginResult> register(HttpServletRequest request, @RequestBody LoginInfo loginInfo) {
         String ip = HttpUtil.getIpAddress(request);
         if (ObjectUtil.isPropertyNull(loginInfo)) {
-            HttpUtil.replyToClient(response, LoginResultBuilder.<LoginResult>paramsError());
-            return;
+            return LoginResultBuilder.<LoginResult>paramsError();
+        }
+        if (!checkSign(loginInfo)) {
+            return LoginResultBuilder.<LoginResult>paramsError();
         }
         String place = "unknown";
 
         try {
             String url = Configuration.TAO_BAO_IP_PLACE + ip;
             String result = HttpUtil.get(url);
-
-            Log.i("result:" + result);
             JSONObject json = JSONObject.fromObject(result);
             if (json.containsKey("code") && json.getInt("code") == 0) {
                 JSONObject data = json.getJSONObject("data");
@@ -130,11 +130,11 @@ public class LoginController {
             loginService.insert(userInfo);
         } catch (Exception e) {
             success = false;
-            HttpUtil.replyToClient(response, LoginResultBuilder.<LoginResult>doubleUser());
         }
         if (success) {
-//            doLogin(response, userInfo, loginInfo.getAppId());
+            return doLogin(userInfo, loginInfo.getAppId());
         }
+        return LoginResultBuilder.<LoginResult>doubleUser();
     }
 
 
