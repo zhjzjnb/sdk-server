@@ -11,7 +11,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,24 +44,24 @@ public class HttpUtil {
         return ip;
     }
 
-    public static Map<String,String> getHttpParams(HttpServletRequest request){
-        Map<String,String[]> map = request.getParameterMap();
+    public static Map<String, String> getHttpParams(HttpServletRequest request) {
+        Map<String, String[]> map = request.getParameterMap();
 
 
-        Map<String,String> result = new HashMap<String,String>();
+        Map<String, String> result = new HashMap<String, String>();
         Log.i("getHttpParams");
-        for (Map.Entry<String, String[]> entry:map.entrySet()) {
+        for (Map.Entry<String, String[]> entry : map.entrySet()) {
 
             String key = entry.getKey();
             String value = entry.getValue()[0];
-            Log.i("[%s]=[%s]",key,value);
-            result.put(key,value);
+            Log.i("[%s]=[%s]", key, value);
+            result.put(key, value);
         }
         return result;
     }
 
     public static String getHttpPostBodyString(HttpServletRequest
-                                                            request) {
+                                                       request) {
         StringBuilder stringBuilder = new StringBuilder();
         BufferedReader in = null;
         try {
@@ -86,8 +90,53 @@ public class HttpUtil {
     }
 
 
-    public static void optionSuccess(com.zsdk.server.bean.Result result){
+    public static void optionSuccess(com.zsdk.server.bean.Result result) {
         result.setState(0);
         result.setMsg("success");
+    }
+
+    public static String get(String url) throws Exception {
+
+        URL localURL = new URL(url);
+
+        URLConnection connection = localURL.openConnection();
+        HttpURLConnection httpURLConnection = (HttpURLConnection) connection;
+
+        InputStream inputStream = null;
+        InputStreamReader inputStreamReader = null;
+        BufferedReader reader = null;
+        StringBuffer resultBuffer = new StringBuffer();
+        String tempLine = null;
+        //响应失败
+        if (httpURLConnection.getResponseCode() >= 300) {
+            throw new Exception("HTTP Request is not success, Response code is " + httpURLConnection.getResponseCode());
+        }
+
+        try {
+            inputStream = httpURLConnection.getInputStream();
+            inputStreamReader = new InputStreamReader(inputStream);
+            reader = new BufferedReader(inputStreamReader);
+
+            while ((tempLine = reader.readLine()) != null) {
+                resultBuffer.append(tempLine);
+            }
+
+        } finally {
+
+            if (reader != null) {
+                reader.close();
+            }
+
+            if (inputStreamReader != null) {
+                inputStreamReader.close();
+            }
+
+            if (inputStream != null) {
+                inputStream.close();
+            }
+
+        }
+
+        return resultBuffer.toString();
     }
 }
