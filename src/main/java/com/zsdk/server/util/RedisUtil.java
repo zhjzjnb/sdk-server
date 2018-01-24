@@ -35,9 +35,14 @@ public class RedisUtil {
         Jedis jedis = jedisPool.getResource();
 
         long code = jedis.setnx(token, value);
-        if (code == 0){
+        if (code == 0) {
             return false;
         }
         return jedis.expire(token, expire) == 1;
+    }
+
+    public boolean del(String key) {
+        Jedis jedis = jedisPool.getResource();
+        return jedis.del(key) == 0;
     }
 }

@@ -1,9 +1,11 @@
 package com.zsdk.server.controller;
 
 
+import com.zsdk.server.bean.Result;
 import com.zsdk.server.cache.CacheManager;
 import com.zsdk.server.client.LoginInfo;
 import com.zsdk.server.client.LoginResult;
+import com.zsdk.server.client.TokenCheck;
 import com.zsdk.server.config.Configuration;
 import com.zsdk.server.model.GameInfo;
 import com.zsdk.server.model.UserInfo;
@@ -14,14 +16,17 @@ import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.print.attribute.standard.Media;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
 import java.util.Date;
 
 /**
@@ -135,5 +140,38 @@ public class LoginController {
 //        int i = 1;
     }
 
+
+    @RequestMapping(path = "/check.do", method = RequestMethod.POST, produces = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @ResponseBody
+    public void check(HttpServletResponse response, TokenCheck tokenCheck) {
+        Result result = new Result();
+        if (ObjectUtil.isPropertyNull(tokenCheck)) {
+            HttpUtil.replyToServer(response, result);
+            return;
+        }
+        String token = tokenCheck.getToken();
+        String key = Configuration.CLIENT_LOGIN_TOKEN_PREFIX + token;
+        String uid = redisUtil.get(key);
+        if (uid == null) {
+            result.setMsg("token过期");
+            result.setState(-2);
+            HttpUtil.replyToServer(response, result);
+            return;
+        }
+        GameInfo gameInfo = CacheManager.getInstance().getGame(Integer.parseInt(tokenCheck.getAppId()));
+        if (gameInfo == null) {
+            result.setMsg("游戏不存在");
+            result.setState(-3);
+            HttpUtil.replyToServer(response, result);
+            return;
+        }
+        String content = tokenCheck.getAppId() + gameInfo.getAppKey() + token;
+        String sign = EncryptUtil.md5(content);
+        if (sign.equals(tokenCheck.getSign())) {
+            HttpUtil.optionSuccess(result);
+            redisUtil.del(key);
+        }
+        HttpUtil.replyToServer(response, result);
+    }
 
 }

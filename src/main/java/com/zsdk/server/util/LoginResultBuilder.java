@@ -9,6 +9,7 @@ import com.zsdk.server.model.UserInfo;
  */
 public class LoginResultBuilder {
 
+    public final static int TOKEN_ERROR = -6;
     public final static int MULTI_ERROR = -5;
     public final static int DOUBLE_USER = -4;
     public final static int PARAMS_ERROR = -3;
@@ -37,5 +38,9 @@ public class LoginResultBuilder {
     }
     public static <T> Result<T> multiError() {
         return new Result<T>(MULTI_ERROR,"重复登录");
+    }
+
+    public static <T> Result<T> tokenError() {
+        return new Result<T>(TOKEN_ERROR,"验证登录");
     }
 }

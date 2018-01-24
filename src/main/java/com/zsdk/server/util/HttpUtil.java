@@ -89,6 +89,19 @@ public class HttpUtil {
         }
     }
 
+    public static void replyToServer(HttpServletResponse response, com.zsdk.server.bean.Result result) {
+        response.setHeader("Content-Type", "text/json;charset=UTF-8");
+
+        Gson gson = new Gson();
+        String ret = gson.toJson(result);
+        try {
+            response.getOutputStream().write(ret.getBytes("UTF-8"));
+            Log.i("replyToServer --> Server: " + result);
+        } catch (IOException e) {
+            Log.e(e.getMessage(), e);
+        }
+    }
+
 
     public static void optionSuccess(com.zsdk.server.bean.Result result) {
         result.setState(0);

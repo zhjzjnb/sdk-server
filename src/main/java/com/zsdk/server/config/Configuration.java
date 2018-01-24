@@ -15,7 +15,7 @@ public class Configuration {
 
 
     //客户端token几秒后过期
-    public static final int CLIENT_LOGIN_TOKEN_LAST_TIME = 10;
+    public static final int CLIENT_LOGIN_TOKEN_LAST_TIME = 5*60;
 
     public static final String CLIENT_LOGIN_TOKEN_PREFIX = "login_token:";
 
