@@ -2,9 +2,11 @@ package com.zsdk.server.controller;
 
 
 import com.google.gson.Gson;
+import com.zsdk.server.cache.CacheManager;
 import com.zsdk.server.client.LoginInfo;
 import com.zsdk.server.client.LoginResult;
 import com.zsdk.server.client.Result;
+import com.zsdk.server.config.Configuration;
 import com.zsdk.server.dao.GameInfoMapper;
 import com.zsdk.server.model.GameInfo;
 import com.zsdk.server.model.UserInfo;
@@ -35,14 +37,27 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
 
+    @Autowired
+    private RedisUtil redisUtil;
+
 
     private void doLogin(HttpServletResponse response, UserInfo userInfo, String appId) throws IOException {
+
+        GameInfo gameInfo = CacheManager.getInstance().getGame(Integer.parseInt(appId));
+        String token = EncryptUtil.genToken(userInfo, gameInfo.getAppKey());
+        boolean flag = redisUtil.setToken(Configuration.CLIENT_LOGIN_TOKEN_PREFIX + token, "" + userInfo.getUid(), Configuration.CLIENT_LOGIN_TOKEN_LAST_TIME);
+
+//        Log.i("token ok:"+String.valueOf(flag));
+        if (!flag){
+            HttpUtil.replyToClient(response, LoginResultBuilder.<LoginResult>multiError());
+            return;
+        }
 
         LoginResult loginResult = new LoginResult();
         loginResult.setUid("" + userInfo.getUid());
         loginResult.setUsername(userInfo.getUserName());
         loginResult.setPassword(userInfo.getPassword());
-        loginResult.setToken(EncryptUtil.genToken(appId));
+        loginResult.setToken(token);
 
         HttpUtil.replyToClient(response, LoginResultBuilder.sucess(loginResult));
     }

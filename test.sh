@@ -1,4 +1,4 @@
-ab -n 50 -c 10 -p ./query.json -T application/json http://192.168.1.147:8081/sdkserver/register
+ab -n 50 -c 10 -p ./query.json -T application/json http://192.168.1.147:8081/sdkserver/login.do
 
 
 # login and register json

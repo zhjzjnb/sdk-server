@@ -1,5 +1,7 @@
 package com.zsdk.server.util;
 
+import com.zsdk.server.model.UserInfo;
+
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -12,8 +14,8 @@ import java.util.UUID;
  */
 public class EncryptUtil {
 
-    public static String genToken(String appId){
-        return appId;
+    public static String genToken(UserInfo userInfo,String appKey){
+        return md5(userInfo.getUid()+appKey+TimeUtil.getCurrentTimestamp());
     }
 
     public static String md5(String txt){

@@ -9,6 +9,7 @@ import com.zsdk.server.model.UserInfo;
  */
 public class LoginResultBuilder {
 
+    public final static int MULTI_ERROR = -5;
     public final static int DOUBLE_USER = -4;
     public final static int PARAMS_ERROR = -3;
     public final static int PASSWORD_ERROR = -2;
@@ -33,5 +34,8 @@ public class LoginResultBuilder {
     public static <T> Result<T> passwordError() { return new Result<T>(PASSWORD_ERROR,"密码错误");}
     public static <T> Result<T> paramsError() {
         return new Result<T>(PARAMS_ERROR,"参数错误");
+    }
+    public static <T> Result<T> multiError() {
+        return new Result<T>(MULTI_ERROR,"重复登录");
     }
 }
