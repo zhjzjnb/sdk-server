@@ -20,6 +20,9 @@ public class Configuration {
     public static final String CLIENT_LOGIN_TOKEN_PREFIX = "login_token:";
 
 
+    public static final String TAO_BAO_IP_PLACE = "http://ip.taobao.com/service/getIpInfo.php?ip=";
+
+
 
 //客户端签名的key
     public final static String CLIENT_SIGN_KEY = "9444925a094311e793ae92361f002671";

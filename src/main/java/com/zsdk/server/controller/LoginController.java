@@ -1,19 +1,24 @@
 package com.zsdk.server.controller;
 
 
-import com.google.gson.Gson;
 import com.zsdk.server.cache.CacheManager;
 import com.zsdk.server.client.LoginInfo;
 import com.zsdk.server.client.LoginResult;
-import com.zsdk.server.client.Result;
+
 import com.zsdk.server.config.Configuration;
-import com.zsdk.server.dao.GameInfoMapper;
+
 import com.zsdk.server.model.GameInfo;
 import com.zsdk.server.model.UserInfo;
 import com.zsdk.server.service.LoginService;
 import com.zsdk.server.util.*;
+import net.sf.json.JSONObject;
+
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,11 +27,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by zhj on 2017/3/14.
@@ -41,14 +44,14 @@ public class LoginController {
     private RedisUtil redisUtil;
 
 
-    private void doLogin(HttpServletResponse response, UserInfo userInfo, String appId) throws IOException {
+    private void doLogin(HttpServletResponse response, UserInfo userInfo, String appId) {
 
         GameInfo gameInfo = CacheManager.getInstance().getGame(Integer.parseInt(appId));
         String token = EncryptUtil.genToken(userInfo, gameInfo.getAppKey());
         boolean flag = redisUtil.setToken(Configuration.CLIENT_LOGIN_TOKEN_PREFIX + token, "" + userInfo.getUid(), Configuration.CLIENT_LOGIN_TOKEN_LAST_TIME);
 
 //        Log.i("token ok:"+String.valueOf(flag));
-        if (!flag){
+        if (!flag) {
             HttpUtil.replyToClient(response, LoginResultBuilder.<LoginResult>multiError());
             return;
         }
@@ -64,7 +67,7 @@ public class LoginController {
 
     @RequestMapping(value = "/login.do", method = RequestMethod.POST)
     @ResponseBody
-    public void login(HttpServletRequest request, HttpServletResponse response, @RequestBody LoginInfo loginInfo) throws IOException {
+    public void login(HttpServletRequest request, HttpServletResponse response, @RequestBody LoginInfo loginInfo) {
 
         if (ObjectUtil.isPropertyNull(loginInfo)) {
             HttpUtil.replyToClient(response, LoginResultBuilder.<LoginResult>paramsError());
@@ -82,11 +85,32 @@ public class LoginController {
 
     @RequestMapping("/register.do")
     @ResponseBody
-    public void register(HttpServletRequest request, HttpServletResponse response, @RequestBody LoginInfo loginInfo) throws IOException {
+    public void register(HttpServletRequest request, HttpServletResponse response, @RequestBody LoginInfo loginInfo) {
         String ip = HttpUtil.getIpAddress(request);
         if (ObjectUtil.isPropertyNull(loginInfo)) {
             HttpUtil.replyToClient(response, LoginResultBuilder.<LoginResult>paramsError());
             return;
+        }
+        String place = "unknown";
+
+        try {
+            String url = Configuration.TAO_BAO_IP_PLACE + ip;
+            OkHttpClient okHttpClient = new OkHttpClient();
+            Request okRequest = new Request.Builder()
+                    .url(url)
+                    .build();
+            Call call = okHttpClient.newCall(okRequest);
+            String result = call.execute().body().string();
+
+            Log.i("result:" + result);
+            JSONObject json = JSONObject.fromObject(result);
+            if (json.containsKey("code") && json.getInt("code") == 0) {
+                JSONObject data = json.getJSONObject("data");
+                place = data.getString("country") + data.getString("region") + data.getString("city");
+            }
+        } catch (Exception e) {
+            Log.e("register error", e);
+            e.printStackTrace();
         }
 
         boolean success = true;
@@ -100,7 +124,7 @@ public class LoginController {
         userInfo.setDeviceModel(loginInfo.getDeviceModel());
         userInfo.setDeviceName(loginInfo.getDeviceName());
         userInfo.setRegisterTime(new Date());
-        userInfo.setRegisterPlace("todo");
+        userInfo.setRegisterPlace(place);
         try {
             loginService.insert(userInfo);
         } catch (Exception e) {
