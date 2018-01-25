@@ -19,8 +19,8 @@ public class AdminUserServiceImpl implements AdminUserService {
     AdminInfoMapper adminInfoMapper;
 
     @Override
-    public boolean isValid(AdminUser adminUser) {
-        AdminInfo exits = adminInfoMapper.selectByName(adminUser.getUsername());
+    public boolean isValid(AdminInfo adminUser) {
+        AdminInfo exits = adminInfoMapper.selectByName(adminUser.getUserName());
         return exits == null ? false : exits.getPassword().equals(adminUser.getPassword());
     }
 

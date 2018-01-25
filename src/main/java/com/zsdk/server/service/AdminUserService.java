@@ -6,7 +6,7 @@ import com.zsdk.server.model.AdminUser;
 import java.util.List;
 
 public interface AdminUserService {
-    boolean isValid(AdminUser adminUser);
+    boolean isValid(AdminInfo adminInfo);
 
     List<AdminInfo> getAll();
 }

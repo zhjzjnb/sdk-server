@@ -23,16 +23,13 @@ public class LoginInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
 
         String reqURI = request.getRequestURI();
-        Log.i("reqURI:"+reqURI);
-//        if (reqURI.contains("doLogin")) {
-//            return true;
-//        } else {
-//            HttpSession session = request.getSession();
-//            Object obj = session.getAttribute("loginName");
-//            if (null == obj || obj.toString().isEmpty()) {
-//                response.sendRedirect("admin/login.jsp");
-//            }
-//        }
+        Log.i("reqURI:" + reqURI);
+        HttpSession session = request.getSession();
+        Object obj = session.getAttribute("loginName");
+        if (null == obj || obj.toString().isEmpty()) {
+            String redirect=request.getContextPath() + "/admin/login.jsp";
+            response.sendRedirect(redirect);
+        }
         return true;
     }
 

@@ -11,6 +11,7 @@ import com.zsdk.server.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -31,13 +32,13 @@ public class AdminController {
 
     @RequestMapping(path = "/doLogin", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    private Result doLogin(HttpServletRequest request, AdminUser adminUser) {
+    private Result doLogin(HttpServletRequest request, @RequestBody AdminInfo adminInfo) {
         Result result = new Result();
-        if (adminUserService.isValid(adminUser)) {
+        if (adminUserService.isValid(adminInfo)) {
             result.setState(Configuration.RESULT_CODE_SUCCESS);
             result.setMsg(Configuration.RESULT_MSG_SUCCESS);
-            request.getSession().setAttribute("loginName", adminUser.getUsername());
-//            request.getSession().setAttribute("password", adminUser.getPassword());
+            request.getSession().setAttribute("loginName", adminInfo.getUserName());
+
         } else {
             result.setState(Configuration.RESULT_CODE_FAIL);
             result.setMsg(Configuration.RESULT_MSG_FAIL);

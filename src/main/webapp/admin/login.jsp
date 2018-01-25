@@ -58,23 +58,24 @@
         var username = $("#username").val();
         var pwd = $("#pwd").val();
         pwd = $.md5(pwd);
-
-        $.post('<%=basePath%>/admin/doLogin', {username: username, password: pwd}, function (result) {
-            console.log(result);
-            if (result.state == 0) {
-
-                location.href = "<%=basePath%>"
-
-            } else {
-//                alert(result.msg)
-
-                $.messager.show({
-                    title:'操作提示',
-                    msg:result.msg
-                })
+//        use ajax to post
+        $.ajax({
+            type:"POST",
+            url:'<%=basePath%>/admin/doLogin',
+            contentType:"application/json",  //发送信息至服务器时内容编码类型。
+            dataType:"json",  // 预期服务器返回的数据类型。如果不指定，jQuery 将自动根据 HTTP 包 MIME 信息来智能判断，比如XML MIME类型就被识别为XML。
+            data:JSON.stringify({username: username, password: pwd}),
+            success:function(result){
+                if (result.state == 0) {
+                    location.href = "<%=basePath%>"
+                } else {
+                    $.messager.show({
+                        title:'操作提示',
+                        msg:result.msg
+                    })
+                }
             }
-
-        }, 'json');
+        });
     }
 
 
