@@ -32,15 +32,12 @@
 
     <div class="datagrid-btn-separator"></div>
 
-    <div style="float: left;">
-        <a class="easyui-linkbutton" plain="true" icon="icon-edit" onclick="javascript:showEditDialog();">编辑</a>
-    </div>
 
     <div class="datagrid-btn-separator"></div>
 
     <div style="float: left;">
         <a class="easyui-linkbutton" plain="true"
-           icon="icon-remove" onclick="javascript:deleteChannel();">删除</a>
+           icon="icon-remove" onclick="javascript:deleteAdmin();">删除</a>
     </div>
 
 </div>
@@ -63,13 +60,13 @@
 
         <div class="u8_form_row">
             <label >权  限：</label>
-            <input type="text" class="easyui-textbox" name="permission" maxlength="255" novalidate />
+            <input type="text" class="easyui-textbox" id="permission" maxlength="255" novalidate />
         </div>
 
     </form>
 </div>
 <div id="dlg-buttons">
-    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="saveUser()" style="width:90px">保 存</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="addUser()" style="width:90px">保 存</a>
     <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dialog_add').dialog('close')" style="width:90px">取 消</a>
 </div>
 
@@ -84,37 +81,11 @@
         });
 
         $("#dialog_add").dialog('open').dialog('setTitle', '添加管理员角色');
-
         $('#fm').form('clear');
-
-        url = '<%=basePath%>/admin/saveAdmin';
-
     }
 
-    function showEditDialog(){
 
-        $("#dialog_add").window({
-            top:($(window).height() - 300) * 0.5,
-            left:($(window).width() - 420) * 0.5
-        });
-
-
-        var row = $('#admins').datagrid('getSelected');
-        if(row){
-
-            $("#dialog_add").dialog('open').dialog('setTitle', '编辑管理员角色');
-            $('#fm').form('load', row);
-            url = '<%=basePath%>/admin/saveAdmin';
-
-        }else{
-            $.messager.show({
-                title:'操作提示',
-                msg:'请选择一条记录'
-            })
-        }
-    }
-
-    function deleteChannel(){
+    function deleteAdmin(){
         var row = $('#admins').datagrid('getSelected');
         if(row){
             $.messager.confirm(
@@ -123,7 +94,7 @@
                     function(r){
                         if(r){
                             $.post('<%=basePath%>/admin/removeAdmin', {id:row.id}, function(result){
-                                if (result.state == 1) {
+                                if (result.state == 0) {
                                     $('#dialog_add').dialog('close');
                                     $("#admins").datagrid('reload');
                                 }
@@ -145,28 +116,27 @@
         }
     }
 
-    function saveUser(){
+    function addUser(){
 
-        $('#fm').form('submit', {
-            url:url,
-            onSubmit:function(){
-                return $(this).form('validate');
-            },
+        $.ajax({
+            type:"POST",
+            url:'<%=basePath%>/admin/addAdmin',
+            contentType:"application/json",  //发送信息至服务器时内容编码类型。
+            dataType:"json",  // 预期服务器返回的数据类型。如果不指定，jQuery 将自动根据 HTTP 包 MIME 信息来智能判断，比如XML MIME类型就被识别为XML。
+            data:JSON.stringify({username: $('#username').val(), password: $('#password').val(), permission:$('#permission').val()}),
             success:function(result){
-                var result = eval('('+result+')');
-
-                if (result.state == 1) {
+                console.log(result);
+                if (result.state == 0) {
                     $('#dialog_add').dialog('close');
                     $("#admins").datagrid('reload');
+                } else {
+                    $.messager.show({
+                        title:'操作提示',
+                        msg:result.msg
+                    })
                 }
-
-                $.messager.show({
-                    title:'操作提示',
-                    msg:result.msg
-                })
             }
-        })
-
+        });
     }
 
 

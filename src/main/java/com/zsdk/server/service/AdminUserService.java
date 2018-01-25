@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface AdminUserService {
     boolean isValid(AdminInfo adminInfo);
-
+    boolean insert(AdminInfo adminInfo);
+    boolean delete(int id);
     List<AdminInfo> getAll();
 }
