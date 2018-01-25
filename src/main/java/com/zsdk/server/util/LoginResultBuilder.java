@@ -15,11 +15,11 @@ public class LoginResultBuilder {
     public final static int PARAMS_ERROR = -3;
     public final static int PASSWORD_ERROR = -2;
     public final static int NO_USER = -1;
-    public final static int SUCESS = 0;
+    public final static int SUCCESS = 0;
 
     public static Result<LoginResult> sucess(LoginResult userInfo) {
         Result<LoginResult> loginResult = new Result<LoginResult>();
-        loginResult.setCode(SUCESS);
+        loginResult.setCode(SUCCESS);
         loginResult.setData(userInfo);
         loginResult.setMsg("成功");
         return loginResult;

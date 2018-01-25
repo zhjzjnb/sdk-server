@@ -3,12 +3,19 @@
 <mapper namespace="com.zsdk.server.dao.AdminInfoMapper">
   <resultMap id="BaseResultMap" type="com.zsdk.server.model.AdminInfo">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="user_name" jdbcType="VARCHAR" property="username" />
     <result column="password" jdbcType="VARCHAR" property="password" />
   </resultMap>
   <sql id="Base_Column_List">
     id, user_name, password
   </sql>
+
+  <select id="getAll" resultMap="BaseResultMap">
+    select * from admin;
+  </select>
+
+
+
   <select id="selectByName" parameterType="String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />

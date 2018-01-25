@@ -183,7 +183,7 @@
         nowrap:true,
         loadMsg:'数据加载中...',
         pageSize:10,
-        pageList:[10,20,50,100],
+        pageList:[10,20,50],
         showFooter:true,
         columns:[[
             {field:'id', title:'ID', width:40, sortable:true},

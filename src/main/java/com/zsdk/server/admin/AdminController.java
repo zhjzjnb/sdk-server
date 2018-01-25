@@ -1,7 +1,9 @@
 package com.zsdk.server.admin;
 
+import com.zsdk.server.bean.Data;
 import com.zsdk.server.bean.Result;
 import com.zsdk.server.config.Configuration;
+import com.zsdk.server.model.AdminInfo;
 import com.zsdk.server.model.AdminUser;
 import com.zsdk.server.service.AdminUserService;
 import com.zsdk.server.util.Log;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * Created by zhj on 18/1/17.
@@ -54,10 +57,21 @@ public class AdminController {
 
 
     @RequestMapping(path = "/adminRoles", method = RequestMethod.GET)
-    public String showByDate() {
+    public String adminRoles() {
         return "adminRoles";
     }
 
+
+    @RequestMapping(path = "/getAllAdmins", method = RequestMethod.POST)
+    @ResponseBody
+    public Data<AdminInfo> getAllAdmins() {
+        Data<AdminInfo> data = new
+                Data<AdminInfo>();
+        List<AdminInfo> list = adminUserService.getAll();
+        data.setTotal(list.size());
+        data.setRows(list);
+        return data;
+    }
 
 
     @Autowired
@@ -66,9 +80,8 @@ public class AdminController {
 
     @RequestMapping(path = "/test")
     public void test() {
-        Log.i("test:" + redisUtil.set("hello","你好"));
+        Log.i("test:" + redisUtil.set("hello", "你好"));
         Log.i("test:" + redisUtil.get("hello"));
-
 
 
     }

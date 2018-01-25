@@ -1,17 +1,13 @@
 package com.zsdk.server.service.impl;
 
 import com.zsdk.server.dao.AdminInfoMapper;
-import com.zsdk.server.dao.UserInfoMapper;
 import com.zsdk.server.model.AdminInfo;
 import com.zsdk.server.model.AdminUser;
-import com.zsdk.server.model.UserInfo;
 import com.zsdk.server.service.AdminUserService;
-import com.zsdk.server.service.LoginService;
-import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * Created by zhj on 17/3/17.
@@ -26,5 +22,10 @@ public class AdminUserServiceImpl implements AdminUserService {
     public boolean isValid(AdminUser adminUser) {
         AdminInfo exits = adminInfoMapper.selectByName(adminUser.getUsername());
         return exits == null ? false : exits.getPassword().equals(adminUser.getPassword());
+    }
+
+    @Override
+    public List<AdminInfo> getAll() {
+        return adminInfoMapper.getAll();
     }
 }
