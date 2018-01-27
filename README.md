@@ -1,12 +1,19 @@
-# sdkserver
+# sdk-server
 
------------------------------
+>[配合android_zsdk使用](https://github.com/zhjzjnb/android_zsdk)
 
-## login and register
+>实现客户端登录和注册，并且token验证，目前客户端不验证token也可以拿到用户的uid
 
-## add game manager
+>后台admin管理，可以添加游戏，添加管理人员
 
-## add redis pool
+>数据存储采用mysql，token临时缓存在redis中
+
+
+# todo list
+
+- [ ] 是否强制验证token才返回用户uid
+- [ ] 支付宝和微信充值接入
+
 
 # 登录成功token验证
 ## 使用http post方式发送json到服务器,数据结构如下
@@ -56,3 +63,7 @@ sign=md5(appId+appKey+token) 32位数小写
 上述符号+仅连接作用
 
 ```
+
+
+作者 [zhj](https://github.com/zhjzjnb)   
+2018 年 01月 27日 
