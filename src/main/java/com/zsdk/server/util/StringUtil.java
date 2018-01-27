@@ -6,6 +6,7 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.zsdk.server.config.Configuration;
 import org.apache.log4j.Logger;
 
 /**
@@ -32,6 +33,18 @@ public class StringUtil {
             }
         }
         return content.toString();
+    }
+
+    public static boolean checkInput(String str){
+        if(str == null){
+            return false;
+        }
+        if(str.length() < Configuration.INPUT_MIN_LEN
+                || str.length() > Configuration.INPUT_MAX_LEN) {
+            return false;
+        }
+        return str.matches("[\\w]+");
+
     }
 
 

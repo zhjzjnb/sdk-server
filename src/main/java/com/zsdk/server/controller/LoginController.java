@@ -41,6 +41,15 @@ public class LoginController {
 
 
     private boolean checkSign(LoginInfo loginInfo) {
+//check account and password
+        if (!StringUtil.checkInput(loginInfo.getUsername())) {
+            return false;
+        }
+        if (loginInfo.getPassword().length() != 32) {
+            return false;
+        }
+
+
         JSONObject json = JSONObject.fromObject(loginInfo);
         List<String> keys = new ArrayList<String>(json.keySet());
         keys.remove("sign");

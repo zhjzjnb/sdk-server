@@ -14,6 +14,10 @@ public class Configuration {
     public static final String RESULT_MSG_FAIL = "操作失败";
 
 
+
+    public final static int INPUT_MIN_LEN = 1;
+    public final static int INPUT_MAX_LEN = 11;
+
     //客户端token几秒后过期
     public static final int CLIENT_LOGIN_TOKEN_LAST_TIME = 5*60;
 
