@@ -67,6 +67,5 @@ sign=md5(appId+appKey+token) 32位数小写
 
 作者 [zhj](https://github.com/zhjzjnb)   
 
-qq:416693050
 
 2018 年 01月 27日 
